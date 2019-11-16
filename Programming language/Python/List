@@ -1,0 +1,9 @@
+list.append(var)
+list.insert(index,var)
+list.pop(var) #return last element, and delete it from list
+list.remove(var) #删除第一次出现的该元素
+list.count(var)
+list.index(var)
+list.extend(listB)
+list.sort()
+list.reverse()
