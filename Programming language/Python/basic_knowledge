@@ -1,0 +1,126 @@
+Python面试相关问题
+•	装饰器（什么是AOP/面向切面编程）、
+装饰器本质上就是一个函数，它可以让其他函数在不需要作任何代码修改的前提下增加额外功能，装饰器的返回值也是一个函数。
+好处：代码简洁，提高程序可复用性
+原因：Python函数能像普通对象一样作为参数被传递，可以被赋值，可以作返回值
+需求场景：插入日志，性能测试，事务处理等
+•	迭代器与生成器的区别什么 
+容器是一系列元素的集合，很多容器都是可迭代对象，x = [1,2,3]，y = iter(x)则是独立的迭代器，迭代器内部有一个状态，该状态用于记录当前迭代的位置，以方便下次迭代时候获取正确的元素。
+迭代器是一个带状态的对象，实现__iter__和__next_方法的对象就是迭代器
+生成器是一种特殊的迭代器，不需要上面的类写__iter__和__next_方法，只需要一个yiled关键字，返回值不是通过return而是yiled
+区别：生成器能做到迭代器能做的所有事情，两者实现方式不一样，生成器更加简洁
+迭代器与列表：列表一次性将所有元素加载到内存，但是迭代器是以延迟计算返回元素，节省内存空间
+生成器与列表：列表生成式的[]换成()就是创建一个生成器
+#列表生成式
+lis = [x*x for x in range(10)]
+#生成器
+generator_ex = (x*x for x in range(10))
+
+•	Python代码执行原理 
+Python将.py看成模块，运行py文件的时候，首先调用python解释器将其编译成一个字节码对象，我们看到的pyc文件就是字节码对象在硬盘上的表现形式。
+代码执行期间，字节码对象存在于内存中，只有模块下的代码执行完以后才会将编译结果保存到pyc文件，下次运行就不用编译了，直接加载到内存汇总就好。
+字节码对象包含了所有字符串、变量、编译后生成的字节码指令以及字节码指令与代码行号之间的对应关系，这样代码报错就指定行数了。
+•	Python的int是怎么实现的 
+Int对象在Python中是用PyIntObject结构体（定义复杂数据类型）表示，该结构体有两个python固有的属性，引用计数和对象类型，所以PyIntObject就是一个对C语言中long类型数值的扩展。出于性能考虑，对于小整数，python使用对象池缓存[-5,257]之间整数，在python系统中共享，对于超出该范围的使用PyIntBlock来避免频繁malloc分配内存。
+•	解释Python的对象 
+Python中一切都是对象，描述对象的时候包括两个方面：1.可以做什么（行为）2.什么样的（属性），在python中一个对象的特征就是属性，行为就是也叫方法，所以得出结论 对象=属性（特征）+行为（方法）
+在python中具有相同属性和方法的对象归为一个类，对象是类的实例化
+•	如何自己实现一个字典 
+分配一个list，长度为n=sys.maxsize,调用key的__hash__函数，然后把值模n，这就是value值的地址，存的时候有冲突就使用开放定址法（探测函数）或者扩充list解决冲突
+思路1：两个list，setter时候先去listk中查找key，找到则把listv中相同位置的设置成新的值value；没找到则分别append
+Getter先去listk中找key，找到则返回listv中对应位置value；找不到报异常
+复杂度为O(n)
+思路2：分配一个一定长度（比如1000）的list，初始值设成sys.maxsize,然后调用key的__hash__()函数(python对象不变量都有一个hash函数)，然后把key的hash值模1000则地址对应就是value，存的时候有冲突可以采用扩充list大小来解决
+import sys
+
+class D(object):
+    def __init__(self):
+        self.L = [sys.maxsize for i in range(1000)]
+
+    def setter(self,key,value):
+        if self.L[key.__hash__()] == sys.maxsize:
+            self.L[key.__hash__()] = value
+        else:
+            self.L[key.__hash__()] = list([self.L[key.__hash__()]]) + [value]
+
+    def getter(self,key):
+        if self.L[key.__hash__()] == sys.maxsize:
+            raise ValueError
+        else:
+            return self.L[key.__hash__()]
+
+a = D()
+a.setter(1,1)
+a.setter(2,1)
+print(a)
+print(a.getter(1))
+print(a.getter(2))
+
+•	什么是GIL、为什么要加GIL、如何理解Python多线程 
+Global Interpreter Lock, CPU趋向于多核，为了利用多核处理器性能就出现了多线程编程，然后带来线程之间数据的一致性和状态同步困难，所以就加入GIL。GIL是用于同步线程的一种机制，它使得任何时刻仅有一个线程在执行，导致python多线程性能甚至比单线程更糟。
+Python多线程有两种方式：函数或者类来包装线程对象
+函数：_thread提供低级别的、原始的线程以及一个简单锁
+模块：threading除了_thread模块中所有方法，还提供其他方法，
+threading.currentThread(),threading.enumerate()返回正在运行的线程的list，threading.activeCount()==len(threading.enumerate()),
+除了使用方法之外，线程模块同样提供Thread类来处理线程。
+•	run(): 用以表示线程活动的方法。start():启动线程活动, isAlive(): 返回线程是否活动的,getName(),setName(): 设置线程名
+•	join([time]): 等待至线程中止。这阻塞调用线程直至线程的join() 方法被调用中止-正常退出或者抛出未处理的异常-或者是可选的超时发生。
+•	 
+线程同步：多个线程对同一个数据进行修改，可能出现问题，需要对多个线程进行同步
+方法：使用Thread对象的Lock和RLock可以实现简单的线程同步，这两个对象对有acquire方法和release方法，对于每次只允许一个操作的数据可以将其放在acquire和release之间，后续还有线程优先级队列
+        # 获取锁，用于线程同步
+        threadLock.acquire()
+        print_time(self.name, self.counter, 3)
+        # 释放锁，开启下一个线程
+        threadLock.release()
+•	什么是协程 
+由于GIL的存在，Python多线程可能比单线程性能更差，所以引入协程。协程作用是在执行函数a时可以中断，然后执行b函数，然后中断继续执行a，这一过程并不是函数调用，可以看成是多线程，但是协程只有一个线程执行。
+Python3.4之前官方不提供协程支持，3.4之后内置asyncio标准库实现协程，python对其是基于生成器实现的，协程是遵循某些规则的生成器。
+
+•	Python的IO多路复用是怎么实现的 
+Select：调用系统，poll，epoll：windows不支持
+ 
+•	什么是上下文管理器 
+上下文表达式：with open(‘test.txt’) as f:
+上下文管理器：open(‘test.txt’)
+写上下文管理器：在一个类里，实现__enter__（connect to resource）和__exit__（close resource connection）的方法，这个类的实例就是一个上下文管理器。
+为什么要用上下文管理器：1.以更优雅的凡事操作资源（文件操作、数据库连接）2.以更优雅的方式处理异常，如果都是try except则代码可读性降低，__exit__(self, exc_type, exc_val, exc_tb): 异常的错误栈信息
+•	你知道右加么（__radd__） 
+Python __add__和__radd__区别：__radd__是自定义的类之间操作符，当Python解释器直行道a+b时首先在实例a中查找有没有__add__操作，没有则在b中查找__radd__方法，而__iadd__是运算符operateor的成员函数，就是累加操作的另一种调用形式
+•	什么是闭包 
+作用域：全局变量，局部变量，
+嵌套函数：外层函数的局部变量可以被内层函数访问
+闭包：使得局部变量在函数外被访问成为可能，another就是一个闭包，闭包本质上是一个函数，由两部分组成，printer函数和变量msg，闭包使得变量值始终处于内存中。
+def print_msg():
+    msg = "zen of python"
+    def printer():
+        print(msg)
+    return printer
+another = print_msg()
+another()
+•	python中一般的类都继承object，那object的父类是什么（type） 
+继承Object是新式类，不继承是经典类，在python2.7里面两个类在多继承方面会存在差异，现如今python3.x新式类已经兼容经典类
+•	谈谈元类、元类的应用 
+元类（type）：对象的类型叫类，类的类型叫作元类，元类生成的实例就是普通类
+应用：获取继承某个类的所有子类
+•	用Python写一个单例模式 （class：房屋设计图）
+__new__:创建一个实例对象，在对象被创建的时候调用该方法是一个类方法（房屋框架）
+__init__:负责将该实例对象初始化，在对象被创建之后调用该方法（装修过程）
+__call__:和类的创建和实例没有太大关系，定义__call__才能被使用函数的方式执行
+单例模式原理就是通过在类属性中添加一个单例判定位ins_flag，通过这个flag判断是否已经被实例化过，如果实例化过就返回该实例
+class Single_ins(object):
+    def __new__(cls, *args, **kwargs):
+        if not hasattr(cls,"_instance"):
+            cls._instance = super(Single_ins, cls).__new__(cls, *args, **kwargs)
+        return cls._instance
+
+s1 = Single_ins()
+s2 = Single_ins()
+print(s1,s2)
+•	谈谈super原理 
+子类调用父类方法，存在继承关系时，
+1.子类调用父类最简单方法是把对象调用转换成类调用，缺点：修改父类名称需要修改多处，python是允许多继承的语言
+2.采用super后父类仅仅被执行一次
+•	什么是多重继承 
+•	浅复制和深复制有什么区别
+
