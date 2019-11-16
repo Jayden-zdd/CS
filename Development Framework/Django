@@ -1,0 +1,38 @@
+1.ORM(Object Relational Mapping) ####Query
+
+User.objects.get() vs User.objects.filter()
+(1).get will cause User.DoesNotExist error, solution:try,except
+(2).filter return list [filter().first(),filter()[1]]	####1).one-to-one w.blog_set.first().site and w.blog.site are same ####2).one-to-many #####son-to-father
+son = models.son.objects.filter(id=1).first(),
+son.name: son name
+son.father.name: father name
+son = models.son.objects.filter(id=1).values('id','name'),
+son['name']: son name
+son['father_name']: father name #####father-to-son father = models.father.objects.filter(id=1).first() son = father.son_set.all() ####3).many-to-many
+Two tables are connected through the third
+ManyToManyField
+class Boy(models.Model):
+name = models.CharField(max_length=32)
+m = models.ManyToManyField('Girl')
+1.obj = models.Boy.objects.filter(name='Jack').first()
+girl_list = obj.m.all()
+2.obj = models.Boy.objects.filter(name='Alice').first()
+boy_list = obj.boy_set.all()
+Notice:Use ManyToManyField to generate only three columns, the id of the two tables and their own id ####Sort,annotate,F,Q,extra
+###2.Unit Test ###init
+
+setUp(self):每个test case运行前都会运行
+@classmethod steUpClass(cls)：所有test case运行之前只运行一次,与TransactionTestCase搭配
+@classmethod setUpTestData(cls)类似上面，执行更快，与TestCase CLass搭配 ###Test case
+str, bytes str类型的字符串，每个字符用字符本身或者\u1234，来表示都可以，后者则是直接是Unicode编码。但打印时都是打印字符本身。
+bytes字符串的组成形式，必须是十六进制数，或者ASCII字符：
+requests.post()无法保存test case下的数据
+Client().post()可以，但无法保存给另一个test case使用
+两者返回的response都是django.http.response.HttpResponse，而response.content是bytes形式的字符串，然后json.loads(str(response1.content,'utf-8'))将其转换成json格式
+注意事项
+1.tests.py和tests文件，不能共存，否则报错
+2.对于url的post有两种方式：（1）requests.post()（2）Client().poost()
+3.测试数据库的保存：（1）setting文件数据库设置（2）python manage.py test dell --keepdb
+4.reverse("user_activate", kwargs={"code":code})
+5.在views.py里面写def test_01不管用
+6.json.dumps : dict转成str;json.loads:str转成dict
