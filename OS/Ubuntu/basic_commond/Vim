@@ -1,0 +1,4 @@
+sudo apt-get install vim
+cd ~/ 进去用户目录后ll会看到隐藏文件夹.vim，解压vimconfig.tar.gz2可以看到里面有.vim文件夹和.vimrc文件，其中.vimrc是vim的配置文件
+安装插件：vim .vimrc后i、v、Esc模式下最下面一行输入:PluginInstall即可（或者在 Bash 中运行vim +PluginInstall +qall）比如:BundleInstallIM ###复制粘贴
+复制起点→ctrl+v→复制终点→y→粘贴起点→p
