@@ -1,0 +1,6 @@
+1.创建数据库
+命令行创建：createdb -h 127.0.0.1 -p 5432 -U dbuser vvportal
+然后给用户dbuser加密码：sudo -u postgres createuser -W -s vvportal
+注释：vvportal是数据库名字，
+进入postgresql后删除数据库：postgres=> drop database vvportal；
+注意：进入postgresql后数据查询等操作需要加入；结尾
