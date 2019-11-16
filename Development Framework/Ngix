@@ -1,0 +1,10 @@
+##Nginx ###start：
+
+sudo service nginx start/stop/restart/reload
+sudo /etc/init.d/nginx start
+cd /usr/local/nginx/sbin然后./nginx ###stop
+cd /usr/local/nginx/sbin 注意/usr/local/nginx是安装的目录
+sudo ./nginx -s stop,最佳方式，另外两种没法stop
+###dealing with error messages
+
+nginx -t
