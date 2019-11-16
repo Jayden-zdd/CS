@@ -1,0 +1,18 @@
+import sys
+
+# first_line = sys.stdin.readline().strip().split()
+n = 5
+alist =[1,2,3,4,5]
+count = 0
+for i in range(n//2):
+    if alist[i]!=0:
+        alist[i] -= 1
+        alist[2*(i+1)-1] -= 1
+        alist[2*(i+1)] -= 1
+        count += 1
+    else:
+        continue
+print(alist)
+print(count)
+# result = count + max(alist[-2:])
+# print(result)
