@@ -1,0 +1,3 @@
+新增用户：
+useradd：linux命令，只是创建用户
+adduser：perl脚本，比较简单，创建用户同时还在/home目录下创建用户名文件夹
