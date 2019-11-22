@@ -7,3 +7,9 @@ list.index(var)
 list.extend(listB)
 list.sort()
 list.reverse()
+
+#删除元素
+1.del list[index]
+2.list.pop(index)
+3.切片
+4.list.remove(value)
