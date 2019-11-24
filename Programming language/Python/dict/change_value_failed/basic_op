@@ -1,0 +1,61 @@
+字典：键必须不可变，所以可以用数字，字符串或元组充当，所以用列表就不行
+a_dict = {1:[1,2],2:[2,3]}
+
+1.访问
+1>a_dict[1],len(a_dict)
+
+2>dict.get(key, default=None) #default: 如果指定键的值不存在时，返回 该默认值 。
+a_dict.get[1]
+a_dict.get[1,[1,2,3]] #return [1,2]
+a_dict.get[3,[4,5]] #return [4,5]
+
+3>dict.has_key()
+
+2. 修改
+dict.setdefault(key, default=None)：如果指定键的值不存在时，返回 该默认值值，并 修改 字典，添加上该 key-value对 。
+dict = {'city': 'nanjing', 'university': 'NUAA'} 
+print(dict.setdefault('college', 'cs'))    # cs
+print(dict.setdefault('location'))    # None
+print(dict)    #  {'city': 'nanjing', 'university': 'NUAA', 'college': 'cs', 'location': None}
+注意：一定要构造键值对的对应关系
+
+3.遍历
+1>dict.items(),<class 'dict_items'>
+2>dict.keys(),
+3>dict.values() #<class 'dict_values'>
+可转化list(dict.keys())
+
+4.合并
+dict_1.update(dict_2)
+
+5.删除
+1>pop
+dict.pop(key[,default]) 返回值是被删除的值
+dict = {'city': 'nanjing', 'university': 'NUAA'}
+print(dict.pop('city'))    # nanjing
+print(dict)    # {'university': 'NUAA'}
+print(dict.pop('city', 'college'))    # college
+
+2>del
+del dict['university']
+del dict
+
+3>popitem
+dict.popitem()随机删除一对键值，一般是尾
+dict = {'city': 'nanjing', 'university': 'NUAA', 'college': 'cs', 'degree': 'master'}
+print(dict.popitem())    # ('degree', 'master')
+print(dict)    # {'city': 'nanjing', 'university': 'NUAA', 'college': 'cs'}
+
+6.清空
+a_dict.clear()
+
+7.生成dict.fromkes(seq,value)
+seq = ('Google', 'Runoob', 'Taobao')
+ 
+dict = dict.fromkeys(seq)
+print "新字典为 : %s" %  str(dict) #新字典为 : {'Google': None, 'Taobao': None, 'Runoob': None}
+dict = dict.fromkeys(seq, 10)
+print "新字典为 : %s" %  str(dict) #新字典为 : {'Google': 10, 'Taobao': 10, 'Runoob': 10}
+
+
+
