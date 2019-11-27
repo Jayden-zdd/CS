@@ -26,9 +26,10 @@ nginx -t
 uWSGI Python 加载器将会搜索的默认函数 application，结合
 1>启动uWSGI来运行一个http服务器,uwsgi --http :9090 --wsgi-file foobar.py,添加并发和监控uwsgi --http :9090 --wsgi-file foobar.py --master --processes 4 --threads 2 --stats 127.0.0.1:9191
 2>部署Django，此命令uwsgi --socket 127.0.0.1:3031 --chdir /home/foobar/myproject/ --wsgi-file myproject/wsgi.py --master --processes 4 --threads 2 --stats 127.0.0.1:9191，
-太长可以弄成一个yourfile.ini配置文件，然后运行uwsgi yourfile.ini就行
+太长可以弄成一个yourfile.ini配置文件，然后运行uwsgi yourfile.ini就行(出现问题：invalid request block size: 21573 (max 4096)...skip，
+问题解决uwsgi被配置成使用socket方式（为tcp协议）进行通信。如果打开浏览器访问uwsgi指定的端口，那么浏览器请求uwsgi的方式为http协议，而不是socket方式。所以就导致uwsgi的log文件中打出上面的错误信息。)
 3>结合Nginx使用，找到Nginx安装目录，配置conf/nginx.conf文件修改server配置：
-server {
+server {，，
         listen       80;
         server_name  localhost;
         
