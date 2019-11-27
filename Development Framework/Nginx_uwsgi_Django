@@ -8,3 +8,9 @@ sudo ./nginx -s stop,最佳方式，另外两种没法stop
 ###dealing with error messages
 
 nginx -t
+
+
+1.Nginx version: 1.16.0,安装目录/usr/local/nginx/，配置文件：/usr/local/nginx/conf/nginx.conf
+安装流程：wget http://nginx.org/download/nginx-1.16.0.tar.gz，然后tar zxvf nginx-1.16.0.tar.gz，然后进入安装包目录cd nginx-1.16.0,
+uwsgi version:
+
