@@ -12,5 +12,34 @@ nginx -t
 
 1.Nginx version: 1.16.0,安装目录/usr/local/nginx/，配置文件：/usr/local/nginx/conf/nginx.conf
 安装流程：wget http://nginx.org/download/nginx-1.16.0.tar.gz，然后tar zxvf nginx-1.16.0.tar.gz，然后进入安装包目录cd nginx-1.16.0,
-uwsgi version:
+./configure (可通过 ./configure --help,然后指定参数生成配置)，make，make install 
 
+1>.configure命令做了大量的“幕后”工作， 包括检测操作系统内核和已经安装的软件， 参数
+的解析， 中间目录的生成以及根据各种参数生成一些C源码文件、 Makefile文件等。
+2>.make命令根据configure命令生成的Makefile文件编译Nginx工程， 并生成目标文件、 最终
+的二进制文件。
+3>.make install命令根据configure执行时的参数将Nginx部署到指定的安装目录， 包括相关目
+
+2.uwsgi version:2.0.18
+安装流程：pip install uwsgi
+(出现问题1：plugins/python/uwsgi_python.h:2:20: fatal error: Python.h: No such file or directory，解决办法：pip3 install python3-dev,注意一点python3-dev版本需要和python3的版本一致)，
+uWSGI Python 加载器将会搜索的默认函数 application，结合
+1>启动uWSGI来运行一个http服务器,uwsgi --http :9090 --wsgi-file foobar.py,添加并发和监控uwsgi --http :9090 --wsgi-file foobar.py --master --processes 4 --threads 2 --stats 127.0.0.1:9191
+2>部署Django，此命令uwsgi --socket 127.0.0.1:3031 --chdir /home/foobar/myproject/ --wsgi-file myproject/wsgi.py --master --processes 4 --threads 2 --stats 127.0.0.1:9191，
+太长可以弄成一个yourfile.ini配置文件，然后运行uwsgi yourfile.ini就行
+3>结合Nginx使用，找到Nginx安装目录，配置conf/nginx.conf文件修改server配置：
+server {
+        listen       80;
+        server_name  localhost;
+        
+        location / {            
+            include  uwsgi_params;
+            uwsgi_pass  127.0.0.1:9090;              //必须和uwsgi中的设置一致
+            uwsgi_param UWSGI_SCRIPT demosite.wsgi;  //入口文件，即wsgi.py相对于项目根目录的位置，“.”相当于一层目录
+            uwsgi_param UWSGI_CHDIR /demosite;       //项目根目录
+            index  index.html index.htm;
+            client_max_body_size 35m;
+        }
+    }
+设置好后再运行uwsgi --ini /etc/uwsgi9090.ini &
+/usr/local/nginx/sbin/nginx
