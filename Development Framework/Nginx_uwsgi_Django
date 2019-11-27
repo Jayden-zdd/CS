@@ -22,7 +22,7 @@ nginx -t
 
 2.uwsgi version:2.0.18
 安装流程：pip install uwsgi
-(出现问题1：plugins/python/uwsgi_python.h:2:20: fatal error: Python.h: No such file or directory，解决办法：pip3 install python3-dev,注意一点python3-dev版本需要和python3的版本一致)，
+(出现问题1：plugins/python/uwsgi_python.h:2:20: fatal error: Python.h: No such file or directory，解决办法：pip3 install python3-dev,注意一点python3-dev版本需要和python3的版本一致，pip install python3.6-dev)，
 uWSGI Python 加载器将会搜索的默认函数 application，结合
 1>启动uWSGI来运行一个http服务器,uwsgi --http :9090 --wsgi-file foobar.py,添加并发和监控uwsgi --http :9090 --wsgi-file foobar.py --master --processes 4 --threads 2 --stats 127.0.0.1:9191
 2>部署Django，此命令uwsgi --socket 127.0.0.1:3031 --chdir /home/foobar/myproject/ --wsgi-file myproject/wsgi.py --master --processes 4 --threads 2 --stats 127.0.0.1:9191，
