@@ -1,0 +1,15 @@
+nginx默认安装路径/etc/nginx/ngxin.conf，绿色安装默认路径/usr/local/nginx/conf/nginx.conf
+
+1.Increasing Upload File Size For All Server Blocks(第一层：作用于一个服务器多个网站)
+1>vim /etc/nginx/nginx.conf,在http{}中加入client_max_body_size 2m;
+2>nginx -s reload(systemctl reload nxing or /etc/init.d/nginx reload)
+
+2.Increasing Upload File Size For a Single Server Block(第二层：针对单个网站再设置)
+1>vim /etc/nginx/site-available/yourdomain.com
+2>client_max_body_size 2m
+3>nginx -s reload(systemctl reload nxing or /etc/init.d/nginx reload)
+
+
+
+
+
