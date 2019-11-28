@@ -12,6 +12,7 @@ nginx -t
 
 1.Nginx version: 1.16.0,安装目录/usr/local/nginx/，配置文件：/usr/local/nginx/conf/nginx.conf
 安装流程：wget http://nginx.org/download/nginx-1.16.0.tar.gz，然后tar zxvf nginx-1.16.0.tar.gz，然后进入安装包目录cd nginx-1.16.0,
+安装依赖库：dpkg -l | grep zlib，sudo apt-get install zlib1g zlib1g-dev ,sudo apt-get install libpcre3 libpcre3-dev,sudo apt-get install openssl libssl-dev
 ./configure (可通过 ./configure --help,然后指定参数生成配置)，make，make install 
 
 1>.configure命令做了大量的“幕后”工作， 包括检测操作系统内核和已经安装的软件， 参数
